@@ -1,0 +1,8 @@
+<?php
+
+return array(
+    'email' => 'youradress@gmail.com',
+    'password' => 'YourPassword',
+    'speadsheetKey' => 'YoUr_SpeadSHe3t-k3Y',
+    'worksheetID' => '1',
+);
