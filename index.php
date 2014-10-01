@@ -40,48 +40,38 @@ foreach ($cellFeed as $cellEntry) {
 }
 
 // building sitemap.xml
-echo '<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">';
+echo <<<INIT
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/TR/xhtml11/xhtml11_schema.html">
+INIT;
 foreach ($urlsMatched as $pair) {
     // most of pages has an alternative page written on another laguge
     if (count($pair) === 2 && array_key_exists(1, $pair) && array_key_exists(2, $pair)) {
         echo <<<URL2
+
   <url>
     <loc>$pair[1]</loc>
-    <xhtml:link 
-                 rel="alternate"
-                 hreflang="en"
-                 href="$pair[2]"
-                 />
-    <xhtml:link 
-                 rel="alternate"
-                 hreflang="ru"
-                 href="$pair[1]"
-                 />
+    <xhtml:link rel="alternate" hreflang="en" href="$pair[2]"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="$pair[1]"/>
   </url>
   <url>
     <loc>$pair[2]</loc>
-    <xhtml:link 
-                 rel="alternate"
-                 hreflang="ru"
-                 href="$pair[1]"
-                 />
-    <xhtml:link 
-                 rel="alternate"
-                 hreflang="en"
-                 href="$pair[2]"
-                 />
+    <xhtml:link rel="alternate" hreflang="ru" href="$pair[1]"/>
+    <xhtml:link rel="alternate" hreflang="en" href="$pair[2]"/>
   </url>
 URL2;
     // but few pages don't has an alternative page
     } else if(count($pair) === 1 && array_key_exists(1, $pair) || array_key_exists(2, $pair)) {
         $url = array_key_exists(1, $pair) ? $pair[1] : $pair[2];
         echo <<<URL1
+
   <url>
     <loc>$url</loc>
   </url>
 URL1;
     }
 }
-echo '</urlset>';
+echo <<<ENDXML
+
+</urlset>
+ENDXML;
