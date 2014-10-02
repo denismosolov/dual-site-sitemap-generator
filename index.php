@@ -29,11 +29,11 @@ foreach ($cellFeed as $cellEntry) {
     $col = $cell->getColumn();
     $row = $cell->getRow();
     // it gets only 2 first columns
-    if ($col == 1 || $col == 2) {
+    if ($col <= 3) {
         // getting the url from cell value and storing in $urlsMatched
         // the sitemap.xml will be generated later
         $cellVal = $cell->getInputValue();
-        if (filter_var($cellVal, FILTER_VALIDATE_URL)) {
+        if ($col <= 2 && filter_var($cellVal, FILTER_VALIDATE_URL) || $col == 3) {
             $urlsMatched[$row][$col] = $cellVal;
         }
     }
@@ -46,16 +46,19 @@ echo <<<INIT
 INIT;
 foreach ($urlsMatched as $pair) {
     // most of pages has an alternative page written on another laguge
-    if (count($pair) === 2 && array_key_exists(1, $pair) && array_key_exists(2, $pair)) {
+    if (array_key_exists(1, $pair) && array_key_exists(2, $pair)) {
+        $priority = array_key_exists(3, $pair) ? $pair[3] : '0.6';
         echo <<<URL2
 
   <url>
     <loc>$pair[1]</loc>
+    <priority>$priority</priority>
     <xhtml:link rel="alternate" hreflang="en" href="$pair[2]"/>
     <xhtml:link rel="alternate" hreflang="ru" href="$pair[1]"/>
   </url>
   <url>
     <loc>$pair[2]</loc>
+    <priority>$priority</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="$pair[1]"/>
     <xhtml:link rel="alternate" hreflang="en" href="$pair[2]"/>
   </url>
@@ -63,9 +66,11 @@ URL2;
     // but few pages don't has an alternative page
     } else if(count($pair) === 1 && array_key_exists(1, $pair) || array_key_exists(2, $pair)) {
         $url = array_key_exists(1, $pair) ? $pair[1] : $pair[2];
+        $priority = array_key_exists(3, $pair) ? $pair[3] : '0.6';
         echo <<<URL1
 
   <url>
+    <priority>$priority</priority>
     <loc>$url</loc>
   </url>
 URL1;
