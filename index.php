@@ -64,7 +64,7 @@ foreach ($urlsMatched as $pair) {
   </url>
 URL2;
     // but few pages don't has an alternative page
-    } else if(count($pair) === 1 && array_key_exists(1, $pair) || array_key_exists(2, $pair)) {
+    } else if(count($pair) === 2 && array_key_exists(1, $pair) || array_key_exists(2, $pair)) {
         $url = array_key_exists(1, $pair) ? $pair[1] : $pair[2];
         $priority = array_key_exists(3, $pair) ? $pair[3] : '0.6';
         echo <<<URL1
